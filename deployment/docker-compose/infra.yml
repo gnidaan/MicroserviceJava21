@@ -1,4 +1,4 @@
-name: 'spring-boot-microservices-course'
+name: 'spring-boot-microservices'
 
 services:
   catalog-db:
