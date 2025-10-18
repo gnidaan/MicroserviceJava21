@@ -19,6 +19,10 @@
 
     <modules>
         <module>catalog-service</module>
+        <module>order-service</module>
+        <module>notifications-service</module>
+        <module>api-gateway</module>
+        <module>bookstore-webapp</module>
     </modules>
 
     <build>
