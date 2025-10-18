@@ -2,7 +2,6 @@ server:
   port: 8989
   shutdown: graceful
 
-
 management:
   endpoints:
     web:
