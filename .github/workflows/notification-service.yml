@@ -5,7 +5,7 @@ on:
     paths:
       - notifications-service/**
     branches:
-      - 'main'
+      - '**'
   pull_request:
     branches: [main]
 
