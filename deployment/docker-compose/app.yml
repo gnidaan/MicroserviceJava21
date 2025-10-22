@@ -11,11 +11,14 @@ services:
       - SWAGGER_API_GATEWAY_URL=http://api-gateway:8989/catalog
       - MANAGEMENT_TRACING_ENABLED=${MANAGEMENT_TRACING_ENABLED}
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
+      - EUREKA_DEFAULT_ZONE=http://discovery-service:8761/eureka/   # added Eureka
     ports:
       - "8081:8081"
     restart: unless-stopped
     depends_on:
       catalog-db:
+        condition: service_healthy
+      discovery-service:
         condition: service_healthy
     deploy:
       resources:
@@ -23,7 +26,6 @@ services:
           memory: 700m
     labels:
       logging: "promtail"
-
     networks:
       - microservices-net
 
@@ -44,6 +46,7 @@ services:
       - SWAGGER_API_GATEWAY_URL=http://api-gateway:8989/orders
       - MANAGEMENT_TRACING_ENABLED=${MANAGEMENT_TRACING_ENABLED}
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
+      - EUREKA_DEFAULT_ZONE=http://discovery-service:8761/eureka/   # added Eureka
     ports:
       - "8082:8082"
     restart: unless-stopped
@@ -51,6 +54,8 @@ services:
       orders-db:
         condition: service_healthy
       bookstore-rabbitmq:
+        condition: service_healthy
+      discovery-service:
         condition: service_healthy
     deploy:
       resources:
@@ -77,6 +82,7 @@ services:
       - MAIL_PORT=1025
       - MANAGEMENT_TRACING_ENABLED=${MANAGEMENT_TRACING_ENABLED}
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
+      - EUREKA_DEFAULT_ZONE=http://discovery-service:8761/eureka/   # added Eureka
     ports:
       - "8083:8083"
     restart: unless-stopped
@@ -87,6 +93,8 @@ services:
         condition: service_healthy
       mailhog:
         condition: service_started
+      discovery-service:
+        condition: service_healthy
     deploy:
       resources:
         limits:
@@ -105,9 +113,13 @@ services:
       - ORDER_SERVICE_URL=http://order-service:8082
       - MANAGEMENT_TRACING_ENABLED=${MANAGEMENT_TRACING_ENABLED}
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
+      - EUREKA_DEFAULT_ZONE=http://discovery-service:8761/eureka/   # added Eureka
     ports:
       - "8989:8989"
     restart: unless-stopped
+    depends_on:
+      discovery-service:
+        condition: service_healthy
     deploy:
       resources:
         limits:
@@ -137,3 +149,26 @@ services:
       logging: "promtail"
     networks:
       - microservices-net
+
+  discovery-service:
+    image: gnidaan/bookstore-discovery-service
+    container_name: discovery-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - MANAGEMENT_TRACING_ENABLED=${MANAGEMENT_TRACING_ENABLED}
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
+    ports:
+      - "8761:8761"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    labels:
+      logging: "promtail"
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    driver: bridge

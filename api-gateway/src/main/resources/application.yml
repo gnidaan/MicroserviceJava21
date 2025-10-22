@@ -66,3 +66,8 @@ springdoc:
 #        url: /v3/api-docs/catalog
 #      - name: orders
 #        url: /v3/api-docs/orders
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_DEFAULT_ZONE:http://localhost:8761/eureka/}
