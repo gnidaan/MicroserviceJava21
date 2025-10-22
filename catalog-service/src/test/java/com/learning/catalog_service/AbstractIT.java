@@ -10,10 +10,7 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootTest(
         webEnvironment = RANDOM_PORT,
-        properties = {
-                "spring.config.import=optional:configserver:http://localhost:8888"
-        }
-)
+        properties = {"spring.config.import=optional:configserver:http://localhost:8888"})
 @Import(TestcontainersConfiguration.class)
 public abstract class AbstractIT {
 
