@@ -15,7 +15,8 @@ import org.springframework.test.context.jdbc.Sql;
             "spring.datasource.url=jdbc:tc:postgresql:16-alpine:///db",
             // Optional config server for safety
             "spring.config.import=optional:configserver:",
-            "spring.cloud.config.fail-fast=false"
+            "spring.cloud.config.fail-fast=false",
+            "spring.cloud.config.enabled=false",
         })
 // @Import(ContainersConfig.class)
 @Sql("/test-data.sql")
