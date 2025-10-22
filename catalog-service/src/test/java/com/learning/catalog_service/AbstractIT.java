@@ -9,7 +9,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = RANDOM_PORT,
+        properties = {"spring.cloud.config.enabled=false"})
 @Import(TestcontainersConfiguration.class)
 @ActiveProfiles("test")
 public abstract class AbstractIT {
