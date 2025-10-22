@@ -12,6 +12,7 @@ services:
       - MANAGEMENT_TRACING_ENABLED=${MANAGEMENT_TRACING_ENABLED}
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
       - EUREKA_DEFAULT_ZONE=http://discovery-service:8761/eureka/   # added Eureka
+      - SERVICE_HOSTNAME=catalog-service
     ports:
       - "8081:8081"
     restart: unless-stopped

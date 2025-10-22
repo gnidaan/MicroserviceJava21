@@ -24,7 +24,8 @@ spring:
         webflux:
           routes:
             - id: catalog-service
-              uri: ${CATALOG_SERVICE_URL:http://localhost:8081}
+#              uri: ${CATALOG_SERVICE_URL:http://localhost:8081}
+              uri: lb://catalog-service
               predicates:
                 - Path=/catalog/**
               filters:
