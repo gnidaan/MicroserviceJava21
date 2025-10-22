@@ -13,6 +13,7 @@ services:
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
       - EUREKA_DEFAULT_ZONE=http://discovery-service:8761/eureka/   # added Eureka
       - SERVICE_HOSTNAME=catalog-service
+      - CONFIG_SERVER_URI=http://config-server:8888
     ports:
       - "8081:8081"
     restart: unless-stopped
@@ -167,6 +168,27 @@ services:
           memory: 700m
     labels:
       logging: "promtail"
+    networks:
+      - microservices-net
+
+  config-server:
+    image: gnidaan/bookstore-config-server
+    container_name: config-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_DEFAULT_ZONE=http://discovery-service:8761/eureka/
+      - MANAGEMENT_TRACING_ENABLED=${MANAGEMENT_TRACING_ENABLED}
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
+    ports:
+      - "8888:8888"
+    restart: unless-stopped
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
     networks:
       - microservices-net
 
